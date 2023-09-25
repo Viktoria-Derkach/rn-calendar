@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { DateTime } from 'luxon';
+import { typography } from './../styles/typography';
 
 const Calendar = () => {
   const [selectedDate, setSelectedDate] = useState(DateTime.local());
@@ -22,9 +23,13 @@ const Calendar = () => {
 
     for (let i = 0; i < daysInMonth; i++) {
       const day = startOfWeek.plus({ days: i });
+      console.log(day, 'day');
+
       calendarDays.push(
         <View key={i} style={styles.calendarDay}>
-          <Text>{day.day}</Text>
+          <View key={i} style={typography.circle}>
+            <Text style={{ ...typography.text, ...typography.todays }}>{day.day}</Text>
+          </View>
         </View>
       );
     }
@@ -48,17 +53,19 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   calendarDay: {
-    width: 40,
+    // width: 40,
     height: 40,
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
     borderColor: 'gray',
+    width: '14%',
   },
   calendarGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginTop: 10,
+    width: '100%',
   },
 });
 
