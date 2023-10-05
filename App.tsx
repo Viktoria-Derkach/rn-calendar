@@ -19,6 +19,7 @@ export default function App() {
   const [fontsLoaded, fontError] = useFonts({
     'open-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
     'open-regular': require('./assets/fonts/OpenSans-Regular.ttf'),
+    // Ionicons: require('./assets/fonts/Ionicons.ttf'),
   });
 
   const onLayoutRootView = useCallback(async () => {

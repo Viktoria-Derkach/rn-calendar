@@ -1,6 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, PanResponder } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  PanResponder,
+  TextInput,
+  Button,
+  Switch,
+} from 'react-native';
 import Modal from 'react-native-modal';
+import { Formik } from 'formik';
 import Animated, {
   Easing,
   useSharedValue,
@@ -11,11 +21,24 @@ import Animated, {
   useAnimatedGestureHandler,
   withRepeat,
 } from 'react-native-reanimated';
+import DayPicker from './DayPicker';
+
+const initialValues = {
+  name: '',
+  note: '',
+  date: '', //
+  shouldRemindMe: false,
+  category: [],
+};
 
 const SlideUpPopover = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const translateY = useSharedValue(500);
   const translateYOffset = useSharedValue(500);
+  const [text, onChangeText] = React.useState('');
+  const [note, onChangeNote] = React.useState('');
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
   const showPopover = () => {
     setModalVisible(true);
@@ -51,6 +74,11 @@ const SlideUpPopover = () => {
   });
   console.log('fffsfsdfdsdf');
 
+  const onSubmit = (submit: () => void) => {
+    submit();
+    hidePopover();
+  };
+
   return (
     <View style={styles.container}>
       <Text>Shosdfsdfw Popover</Text>
@@ -62,10 +90,47 @@ const SlideUpPopover = () => {
         <Animated.View style={[styles.modalContent, animatedStyle]}>
           <View style={styles.draggableHandle} />
           {/* Your popover content goes here */}
-          <Text>Popover Content</Text>
-          <TouchableOpacity onPress={hidePopover}>
-            <Text>Close</Text>
-          </TouchableOpacity>
+          <Text style={{ ...styles.title, ...styles.marginB }}>Add New Event</Text>
+          <Formik initialValues={initialValues} onSubmit={values => console.log(values)}>
+            {({ handleChange, handleBlur, handleSubmit, values, setFieldValue }) => (
+              <>
+                <TextInput
+                  style={{ ...styles.input, ...styles.marginB }}
+                  onChangeText={handleChange('name')}
+                  onBlur={handleBlur('name')}
+                  value={values.name}
+                  placeholder="Event name"
+                  autoFocus
+                  enterKeyHint="next"
+                  inputMode="text"
+                  placeholderTextColor="#8F9BB3"
+                />
+                <TextInput
+                  editable
+                  multiline
+                  numberOfLines={4}
+                  maxLength={40}
+                  onChangeText={handleChange('note')}
+                  onBlur={handleBlur('note')}
+                  value={values.note}
+                  style={{ ...styles.input, ...styles.marginB, minHeight: 90 }}
+                  enterKeyHint="next"
+                  inputMode="text"
+                  placeholderTextColor="#8F9BB3"
+                  placeholder="Type the note here..."
+                />
+                <DayPicker />
+                <Switch
+                  trackColor={{ false: '#767577', true: '#81b0ff' }}
+                  thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                  ios_backgroundColor="#3e3e3e"
+                  onValueChange={(value): any => setFieldValue('shouldRemindMe', value)}
+                  value={values.shouldRemindMe}
+                />
+                <Button onPress={() => onSubmit(handleSubmit)} title="Submit" />
+              </>
+            )}
+          </Formik>
         </Animated.View>
       </Modal>
     </View>
@@ -73,6 +138,9 @@ const SlideUpPopover = () => {
 };
 
 const styles = StyleSheet.create({
+  marginB: {
+    marginBottom: 15,
+  },
   container: {
     // flex: 1,
     // justifyContent: 'center',
@@ -98,6 +166,20 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 10,
     borderRadius: 3,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: '600',
+    lineHeight: 22,
+    letterSpacing: 0,
+    textAlign: 'center',
+  },
+  input: {
+    borderWidth: 1,
+    padding: 15,
+    borderRadius: 10,
+    color: '#8F9BB3',
+    borderColor: '#8F9BB3',
   },
 });
 
