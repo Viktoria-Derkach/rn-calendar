@@ -6,7 +6,7 @@ export const typography = StyleSheet.create({
     fontWeight: '500',
     lineHeight: 20,
     letterSpacing: 0,
-    textAlign: 'center',
+    // textAlign: 'center',
     color: '#222B45',
   },
   greyColor: {

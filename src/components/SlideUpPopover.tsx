@@ -1,27 +1,12 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  PanResponder,
-  TextInput,
-  Button,
-  Switch,
-} from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, Button, Switch } from 'react-native';
 import Modal from 'react-native-modal';
 import { Formik } from 'formik';
-import Animated, {
-  Easing,
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  withTiming,
-  withSequence,
-  useAnimatedGestureHandler,
-  withRepeat,
-} from 'react-native-reanimated';
+import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import DayPicker from './DayPicker';
+import { typography } from './../styles/typography';
+import Categories from './Categories';
+import { ICategory } from '../types/utils';
 
 const initialValues = {
   name: '',
@@ -31,14 +16,25 @@ const initialValues = {
   category: [],
 };
 
+const categories: ICategory[] = [
+  {
+    color: '#00B383',
+    type: 'Birthday',
+  },
+  {
+    color: '#0095FF',
+    type: 'Workout',
+  },
+  {
+    color: '#735BF2',
+    type: 'Brainstorm',
+  },
+];
+
 const SlideUpPopover = () => {
   const [isModalVisible, setModalVisible] = useState(false);
   const translateY = useSharedValue(500);
   const translateYOffset = useSharedValue(500);
-  const [text, onChangeText] = React.useState('');
-  const [note, onChangeNote] = React.useState('');
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
   const showPopover = () => {
     setModalVisible(true);
@@ -51,28 +47,11 @@ const SlideUpPopover = () => {
     setModalVisible(false);
   };
 
-  const panGestureHandler = useAnimatedGestureHandler({
-    onStart: (_, context) => {
-      context.startY = translateY.value;
-    },
-    onActive: (event, context) => {
-      translateY.value = context.startY + event.translationY;
-    },
-    onEnd: (_, context) => {
-      if (context.startY - translateY.value > 100) {
-        hidePopover();
-      } else {
-        showPopover();
-      }
-    },
-  });
-
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [{ translateY: translateY.value }],
     };
   });
-  console.log('fffsfsdfdsdf');
 
   const onSubmit = (submit: () => void) => {
     submit();
@@ -89,7 +68,6 @@ const SlideUpPopover = () => {
       <Modal isVisible={isModalVisible} onBackdropPress={hidePopover} style={styles.modal}>
         <Animated.View style={[styles.modalContent, animatedStyle]}>
           <View style={styles.draggableHandle} />
-          {/* Your popover content goes here */}
           <Text style={{ ...styles.title, ...styles.marginB }}>Add New Event</Text>
           <Formik initialValues={initialValues} onSubmit={values => console.log(values)}>
             {({ handleChange, handleBlur, handleSubmit, values, setFieldValue }) => (
@@ -120,14 +98,36 @@ const SlideUpPopover = () => {
                   placeholder="Type the note here..."
                 />
                 <DayPicker />
-                <Switch
-                  trackColor={{ false: '#767577', true: '#81b0ff' }}
-                  thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
-                  ios_backgroundColor="#3e3e3e"
-                  onValueChange={(value): any => setFieldValue('shouldRemindMe', value)}
-                  value={values.shouldRemindMe}
-                />
-                <Button onPress={() => onSubmit(handleSubmit)} title="Submit" />
+                <View
+                  style={{
+                    ...styles.container_switch,
+                    ...styles.marginB,
+                    width: '100%',
+                  }}
+                >
+                  <Text style={{ ...typography.text, width: '50%' }}>Reminds me</Text>
+                  <View style={{ ...styles.switch, width: '50%' }}>
+                    <Switch
+                      trackColor={{ false: '#CED3DE', true: '#735BF2' }}
+                      thumbColor={values.shouldRemindMe ? '#FFFFFF' : '#FFFFFF'}
+                      ios_backgroundColor="#CED3DEF"
+                      onValueChange={(value): any => setFieldValue('shouldRemindMe', value)}
+                      value={values.shouldRemindMe}
+                    />
+                  </View>
+                </View>
+
+                <View
+                  style={{
+                    ...styles.marginB,
+                  }}
+                >
+                  <Categories categories={categories} />
+                </View>
+
+                <View style={styles.marginB}>
+                  <Button color="#735BF2" onPress={() => onSubmit(handleSubmit)} title="Submit" />
+                </View>
               </>
             )}
           </Formik>
@@ -181,6 +181,13 @@ const styles = StyleSheet.create({
     color: '#8F9BB3',
     borderColor: '#8F9BB3',
   },
+  container_switch: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  switch: {},
 });
 
 export default SlideUpPopover;
