@@ -1,72 +1,134 @@
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+
 import { DateTime } from 'luxon';
 import { typography } from './../styles/typography';
 
 const Calendar = () => {
-  const [selectedDate, setSelectedDate] = useState(DateTime.local());
+  const [currentDate, setCurrentDate] = useState(DateTime.local());
+  console.log(currentDate, 'currentDate');
 
-  const handlePrevMonth = () => {
-    setSelectedDate(selectedDate.minus({ months: 1 }));
-  };
-
-  const handleNextMonth = () => {
-    setSelectedDate(selectedDate.plus({ months: 1 }));
-  };
-
-  const renderCalendar = () => {
-    const daysInMonth = selectedDate.daysInMonth;
-    const firstDayOfMonth = selectedDate.set({ day: 1 });
+  const renderWeeks = () => {
+    const weeksArray = [];
+    const firstDayOfMonth = currentDate.startOf('month');
+    const totalDaysInMonth = firstDayOfMonth.daysInMonth;
     const startOfWeek = firstDayOfMonth.startOf('week');
 
-    const calendarDays = [];
-    console.log(selectedDate.minus({ month: 1 }), 'sel');
+    let currentWeek = [];
 
-    for (let i = 0; i < daysInMonth; i++) {
-      const day = startOfWeek.plus({ days: i });
-      console.log(day, daysInMonth, startOfWeek, 'day');
+    for (let i = 1; i <= totalDaysInMonth; i++) {
+      const day = startOfWeek.set({ day: i, month: currentDate.month });
+      const weekDay = day.weekday;
+      const isCurrentMonth = day.hasSame(firstDayOfMonth, 'month');
 
-      calendarDays.push(
-        <View key={i} style={styles.calendarDay}>
-          <View key={i} style={typography.circle}>
-            <Text style={[typography.text, typography.todays]}>{day.day}</Text>
-          </View>
-        </View>
+      if (weekDay === 1 || currentWeek.length === 0) {
+        // Start a new week on Sunday or when the currentWeek is empty
+        currentWeek = [];
+        weeksArray.push(currentWeek);
+      }
+
+      currentWeek.push(
+        <TouchableOpacity
+          key={day.toISODate()}
+          onPress={() => handleDayPress(day)}
+          style={[
+            styles.dayContainer,
+            !isCurrentMonth && styles.nonCurrentMonthDay,
+            weekDay >= 6 && styles.weekendDay,
+          ]}
+        >
+          <Text style={[styles.dayText, !isCurrentMonth && styles.nonCurrentMonthText]}>
+            {day.day}
+          </Text>
+        </TouchableOpacity>
       );
     }
 
-    return calendarDays;
+    return weeksArray.map((week, index) => (
+      <View
+        key={index}
+        style={[styles.weekContainer, { alignSelf: index === 0 ? 'flex-end' : 'flex-start' }]}
+      >
+        {week}
+      </View>
+    ));
+  };
+
+  const handleDayPress = day => {
+    console.log('Selected day:', day.toISODate());
+  };
+
+  const goToPreviousMonth = () => {
+    setCurrentDate(currentDate.minus({ months: 1 }));
+  };
+
+  const goToNextMonth = () => {
+    setCurrentDate(currentDate.plus({ months: 1 }));
   };
 
   return (
-    <View style={styles.calendar}>
-      <Text>{selectedDate.toFormat('MMMM yyyy')}</Text>
-      <Button title="Previous Month" onPress={handlePrevMonth} />
-      <Button title="Next Month" onPress={handleNextMonth} />
-      <View style={styles.calendarGrid}>{renderCalendar()}</View>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={goToPreviousMonth}>
+          <Text style={styles.monthButton}>{'<'}</Text>
+        </TouchableOpacity>
+        <Text style={styles.monthText}>{currentDate.setLocale('en-US').toFormat('MMMM yyyy')}</Text>
+        <TouchableOpacity onPress={goToNextMonth}>
+          <Text style={styles.monthButton}>{'>'}</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.calendarContainer}>{renderWeeks()}</View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  calendar: {
+  container: {
     alignItems: 'center',
-    marginTop: 20,
   },
-  calendarDay: {
-    // width: 40,
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    width: '100%',
+    paddingHorizontal: 20,
+    marginBottom: 10,
+  },
+  monthButton: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  monthText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  calendarContainer: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+  weekContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between', // Align days of the week horizontally
+  },
+  dayContainer: {
+    width: 40,
     height: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'gray',
-    width: '14%',
+    borderRadius: 20,
+    margin: 2,
   },
-  calendarGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginTop: 10,
-    width: '100%',
+  dayText: {
+    fontSize: 18,
+  },
+  nonCurrentMonthDay: {
+    opacity: 0.4,
+  },
+  nonCurrentMonthText: {
+    color: 'gray',
+  },
+  weekendDay: {
+    backgroundColor: 'lightgray',
   },
 });
 
