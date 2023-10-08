@@ -8,6 +8,7 @@ import { calendarObject } from './src/utils/date';
 import { store } from './src/store';
 import AppNavigation from './src/navigation/AppNavigation';
 import { NavigationContainer } from '@react-navigation/native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Stack = createNativeStackNavigator();
@@ -43,10 +44,12 @@ export default function App() {
   }
 
   return (
-    <Provider store={store}>
-      <NavigationContainer>
-        <AppNavigation />
-      </NavigationContainer>
-    </Provider>
+    <SafeAreaProvider>
+      <Provider store={store}>
+        <NavigationContainer>
+          <AppNavigation />
+        </NavigationContainer>
+      </Provider>
+    </SafeAreaProvider>
   );
 }

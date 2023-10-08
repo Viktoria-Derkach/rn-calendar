@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { View, Text, Button, StyleSheet, SafeAreaView } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const DayPicker = () => {

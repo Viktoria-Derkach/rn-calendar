@@ -3,6 +3,8 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { ICategory } from '../types/utils';
 import { typography } from './../styles/typography';
 import { lightenColor } from '../utils/lightenColor';
+import { FormikErrors } from 'formik';
+import { categories } from '../data/categories';
 
 interface CategoryProps {
   category: ICategory;
@@ -16,7 +18,7 @@ const Category = ({ category, selected, handlePress }: CategoryProps) => {
       ? {
           borderWidth: 2,
           borderColor: category.color,
-          shadowColor: lightenColor(category.color, 35), // Glow color
+          shadowColor: lightenColor(category.color, 35),
           shadowOffset: { width: 0, height: 0 },
           shadowOpacity: 1,
           shadowRadius: 5,
@@ -42,11 +44,16 @@ const Category = ({ category, selected, handlePress }: CategoryProps) => {
     </TouchableOpacity>
   );
 };
-interface CategoriesProps {
-  categories: ICategory[];
+interface CategoriesProps<T> {
+  initialValue: null;
+  setFieldValue: (
+    field: string,
+    value: any,
+    shouldValidate?: boolean
+  ) => Promise<void | FormikErrors<T>>;
 }
-const Categories = ({ categories }: CategoriesProps) => {
-  const [selected, setSelected] = useState<ICategory | null>(null);
+const Categories = <T extends {}>({ setFieldValue, initialValue }: CategoriesProps<T>) => {
+  const [selected, setSelected] = useState<ICategory | null>(initialValue);
   const [isSelected, setIsSelected] = useState(false);
 
   const handlePress = (category: ICategory): void => {
@@ -56,9 +63,10 @@ const Categories = ({ categories }: CategoriesProps) => {
     } else {
       setSelected(null);
     }
+    setFieldValue('category', category);
   };
   return (
-    <View style={{ ...styles.container }}>
+    <View style={[styles.container]}>
       {categories.map(category => (
         <Category
           key={category.type}

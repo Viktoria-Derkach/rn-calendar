@@ -1,37 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, PropsWithChildren } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, TextInput, Button, Switch } from 'react-native';
 import Modal from 'react-native-modal';
 import { Formik } from 'formik';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
-import DayPicker from './DayPicker';
-import { typography } from './../styles/typography';
-import Categories from './Categories';
-import { ICategory } from '../types/utils';
+import DayPicker from '../components/DayPicker';
+import { typography } from '../styles/typography';
+import Categories from '../components/Categories';
 
 const initialValues = {
   name: '',
   note: '',
   date: '', //
   shouldRemindMe: false,
-  category: [],
+  category: null,
 };
 
-const categories: ICategory[] = [
-  {
-    color: '#00B383',
-    type: 'Birthday',
-  },
-  {
-    color: '#0095FF',
-    type: 'Workout',
-  },
-  {
-    color: '#735BF2',
-    type: 'Brainstorm',
-  },
-];
-
-const SlideUpPopover = () => {
+const SlideUpPopover = ({ children }: PropsWithChildren<{}>) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const translateY = useSharedValue(500);
   const translateYOffset = useSharedValue(500);
@@ -60,20 +44,17 @@ const SlideUpPopover = () => {
 
   return (
     <View style={styles.container}>
-      <Text>Shosdfsdfw Popover</Text>
-      <TouchableOpacity onPress={showPopover}>
-        <Text>Show Popover</Text>
-      </TouchableOpacity>
+      <TouchableOpacity onPress={showPopover}>{children}</TouchableOpacity>
 
       <Modal isVisible={isModalVisible} onBackdropPress={hidePopover} style={styles.modal}>
         <Animated.View style={[styles.modalContent, animatedStyle]}>
           <View style={styles.draggableHandle} />
-          <Text style={{ ...styles.title, ...styles.marginB }}>Add New Event</Text>
+          <Text style={[styles.title, styles.marginB]}>Add New Event</Text>
           <Formik initialValues={initialValues} onSubmit={values => console.log(values)}>
             {({ handleChange, handleBlur, handleSubmit, values, setFieldValue }) => (
               <>
                 <TextInput
-                  style={{ ...styles.input, ...styles.marginB }}
+                  style={[styles.input, styles.marginB]}
                   onChangeText={handleChange('name')}
                   onBlur={handleBlur('name')}
                   value={values.name}
@@ -91,22 +72,21 @@ const SlideUpPopover = () => {
                   onChangeText={handleChange('note')}
                   onBlur={handleBlur('note')}
                   value={values.note}
-                  style={{ ...styles.input, ...styles.marginB, minHeight: 90 }}
+                  style={[styles.input, styles.marginB, { minHeight: 90 }]}
                   enterKeyHint="next"
                   inputMode="text"
                   placeholderTextColor="#8F9BB3"
                   placeholder="Type the note here..."
                 />
-                <DayPicker />
-                <View
-                  style={{
-                    ...styles.container_switch,
-                    ...styles.marginB,
-                    width: '100%',
-                  }}
-                >
-                  <Text style={{ ...typography.text, width: '50%' }}>Reminds me</Text>
-                  <View style={{ ...styles.switch, width: '50%' }}>
+                <View style={[styles.marginB]}>
+                  <DayPicker />
+                </View>
+
+                <View style={[styles.container_switch, styles.marginB, { width: '100%' }]}>
+                  <View style={[{ width: '50%' }]}>
+                    <Text style={[typography.text, { width: '70%' }]}>Reminds me</Text>
+                  </View>
+                  <View style={[styles.switch, { width: '20%' }]}>
                     <Switch
                       trackColor={{ false: '#CED3DE', true: '#735BF2' }}
                       thumbColor={values.shouldRemindMe ? '#FFFFFF' : '#FFFFFF'}
@@ -117,12 +97,11 @@ const SlideUpPopover = () => {
                   </View>
                 </View>
 
-                <View
-                  style={{
-                    ...styles.marginB,
-                  }}
-                >
-                  <Categories categories={categories} />
+                <View style={[styles.marginB]}>
+                  <Text style={[typography.text, styles.marginB, { fontSize: 17 }]}>
+                    Select Catgeory
+                  </Text>
+                  <Categories initialValue={values.category} setFieldValue={setFieldValue} />
                 </View>
 
                 <View style={styles.marginB}>
@@ -186,6 +165,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    width: '100%',
   },
   switch: {},
 });

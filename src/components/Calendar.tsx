@@ -20,15 +20,16 @@ const Calendar = () => {
     const startOfWeek = firstDayOfMonth.startOf('week');
 
     const calendarDays = [];
+    console.log(selectedDate.minus({ month: 1 }), 'sel');
 
     for (let i = 0; i < daysInMonth; i++) {
       const day = startOfWeek.plus({ days: i });
-      console.log(day, 'day');
+      console.log(day, daysInMonth, startOfWeek, 'day');
 
       calendarDays.push(
         <View key={i} style={styles.calendarDay}>
           <View key={i} style={typography.circle}>
-            <Text style={{ ...typography.text, ...typography.todays }}>{day.day}</Text>
+            <Text style={[typography.text, typography.todays]}>{day.day}</Text>
           </View>
         </View>
       );
