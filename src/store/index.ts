@@ -1,12 +1,15 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import thunkMiddleware from 'redux-thunk';
 import daysReducer from './days/reducer';
+import { eventAPI } from '../services/EventService';
+
+const rootReducer = combineReducers({
+  [eventAPI.reducerPath]: eventAPI.reducer,
+});
 
 export const store = configureStore({
-  reducer: {
-    days: daysReducer,
-  },
-  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(thunkMiddleware),
+  reducer: rootReducer,
+  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(eventAPI.middleware),
   devTools: process.env.NODE_ENV !== 'production',
 });
 

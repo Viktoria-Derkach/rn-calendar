@@ -1,16 +1,28 @@
 import React, { useState, PropsWithChildren } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, Button, Switch } from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  TextInput,
+  Button,
+  Switch,
+  Alert,
+} from 'react-native';
 import Modal from 'react-native-modal';
 import { Formik } from 'formik';
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated';
 import DayPicker from '../components/DayPicker';
 import { typography } from '../styles/typography';
 import Categories from '../components/Categories';
+import { eventAPI } from '../services/EventService';
+import { CategoryType, IEvent } from '../types/utils';
+import { formatDate } from '../utils/formatDate';
 
-const initialValues = {
+const initialValues: IEvent = {
   name: '',
   note: '',
-  date: '', //
+  date: formatDate(new Date()),
   shouldRemindMe: false,
   category: null,
 };
@@ -19,6 +31,7 @@ const SlideUpPopover = ({ children }: PropsWithChildren<{}>) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const translateY = useSharedValue(500);
   const translateYOffset = useSharedValue(500);
+  const [createEvent, {}] = eventAPI.useCreateEventMutation();
 
   const showPopover = () => {
     setModalVisible(true);
@@ -37,6 +50,16 @@ const SlideUpPopover = ({ children }: PropsWithChildren<{}>) => {
     };
   });
 
+  const createEventOnSubmit = async (values: IEvent) => {
+    try {
+      await createEvent(values);
+      Alert.alert('Event created', '', [], { cancelable: true });
+      console.log(values);
+    } catch (error) {
+      console.error('Error adding event', error);
+    }
+  };
+
   const onSubmit = (submit: () => void) => {
     submit();
     hidePopover();
@@ -50,7 +73,7 @@ const SlideUpPopover = ({ children }: PropsWithChildren<{}>) => {
         <Animated.View style={[styles.modalContent, animatedStyle]}>
           <View style={styles.draggableHandle} />
           <Text style={[styles.title, styles.marginB]}>Add New Event</Text>
-          <Formik initialValues={initialValues} onSubmit={values => console.log(values)}>
+          <Formik initialValues={initialValues} onSubmit={createEventOnSubmit}>
             {({ handleChange, handleBlur, handleSubmit, values, setFieldValue }) => (
               <>
                 <TextInput
@@ -79,7 +102,7 @@ const SlideUpPopover = ({ children }: PropsWithChildren<{}>) => {
                   placeholder="Type the note here..."
                 />
                 <View style={[styles.marginB]}>
-                  <DayPicker />
+                  <DayPicker setFieldValue={setFieldValue} />
                 </View>
 
                 <View style={[styles.container_switch, styles.marginB, { width: '100%' }]}>

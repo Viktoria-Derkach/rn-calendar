@@ -1,13 +1,23 @@
 import React, { useState } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { FormikErrors } from 'formik';
+import { formatDate } from '../utils/formatDate';
 
-const DayPicker = () => {
+interface Props {
+  setFieldValue: (
+    field: string,
+    value: any,
+    shouldValidate?: boolean
+  ) => Promise<void | FormikErrors<T>>;
+}
+
+const DayPicker = ({ setFieldValue }: Props) => {
   const [date, setDate] = useState(new Date());
 
   const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate;
+    setDate(selectedDate);
 
-    setDate(currentDate);
+    setFieldValue('date', formatDate(selectedDate));
   };
 
   return (

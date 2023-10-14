@@ -6,7 +6,6 @@ import { typography } from './../styles/typography';
 
 const Calendar = () => {
   const [currentDate, setCurrentDate] = useState(DateTime.local());
-  console.log(currentDate, 'currentDate');
 
   const renderWeeks = () => {
     const weeksArray = [];
@@ -40,6 +39,11 @@ const Calendar = () => {
           <Text style={[styles.dayText, !isCurrentMonth && styles.nonCurrentMonthText]}>
             {day.day}
           </Text>
+          <View style={[styles.dot_container]}>
+            <View style={[styles.dot, { backgroundColor: 'blue' }]}></View>
+            {/* <View style={[styles.dot, { backgroundColor: 'blue' }]}></View>
+            <View style={[styles.dot, { backgroundColor: 'blue' }]}></View> */}
+          </View>
         </TouchableOpacity>
       );
     }
@@ -111,8 +115,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between', // Align days of the week horizontally
   },
   dayContainer: {
-    width: 40,
-    height: 40,
+    width: 50,
+    height: 50,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 20,
@@ -129,6 +133,20 @@ const styles = StyleSheet.create({
   },
   weekendDay: {
     backgroundColor: 'lightgray',
+  },
+  dot: {
+    borderRadius: 50,
+    marginRight: 7,
+    width: '10%',
+    height: 5,
+  },
+  dot_container: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    // color: 'black',
+    width: '100%',
   },
 });
 
