@@ -1,11 +1,11 @@
-export const CategoryType = {
-  Workout: 'Workout',
-  Birthday: 'Birthday',
-  Brainstorm: 'Brainstorm',
-} as const;
+export enum CategoryType {
+  Workout = 'Workout',
+  Birthday = 'Birthday',
+  Brainstorm = 'Brainstorm',
+}
 export interface ICategory {
   color: string;
-  type: typeof CategoryType;
+  type: CategoryType;
 }
 
 export interface IEvent {

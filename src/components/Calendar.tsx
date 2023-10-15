@@ -3,9 +3,24 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 import { DateTime } from 'luxon';
 import { typography } from './../styles/typography';
+import { useAppDispatch } from '../hooks/useAppDispatch';
+import { selectDay } from '../store/days/reducer';
+import { useAppSelector } from '../hooks/useAppSelector';
 
-const Calendar = () => {
+const Calendar = ({ events }) => {
   const [currentDate, setCurrentDate] = useState(DateTime.local());
+  const dispatch = useAppDispatch();
+  const selectedDay = useAppSelector(state => state.days.selectedDay);
+
+  const getEvents = day => {
+    const res = [];
+    events.forEach(el => {
+      if (el.date === day && res.length <= 2) {
+        res.push(el);
+      }
+    });
+    return res;
+  };
 
   const renderWeeks = () => {
     const weeksArray = [];
@@ -34,16 +49,32 @@ const Calendar = () => {
             styles.dayContainer,
             !isCurrentMonth && styles.nonCurrentMonthDay,
             weekDay >= 6 && styles.weekendDay,
+            selectedDay === day.toISODate() && styles.selectedDay,
           ]}
         >
-          <Text style={[styles.dayText, !isCurrentMonth && styles.nonCurrentMonthText]}>
+          <Text
+            style={[
+              styles.dayText,
+              !isCurrentMonth && styles.nonCurrentMonthText,
+              selectedDay === day.toISODate() && styles.selectedDayText,
+            ]}
+          >
             {day.day}
           </Text>
-          <View style={[styles.dot_container]}>
-            <View style={[styles.dot, { backgroundColor: 'blue' }]}></View>
-            {/* <View style={[styles.dot, { backgroundColor: 'blue' }]}></View>
-            <View style={[styles.dot, { backgroundColor: 'blue' }]}></View> */}
-          </View>
+          {!!events?.length && (
+            <View style={[styles.dotContainer]}>
+              {getEvents(day.toISODate()).map(el => (
+                <View style={[{ width: '30%' }]}>
+                  <View
+                    style={[
+                      typography.dot,
+                      { backgroundColor: el.category ? el.category.color : 'red' },
+                    ]}
+                  ></View>
+                </View>
+              ))}
+            </View>
+          )}
         </TouchableOpacity>
       );
     }
@@ -59,6 +90,7 @@ const Calendar = () => {
   };
 
   const handleDayPress = day => {
+    dispatch(selectDay(day.toISODate()));
     console.log('Selected day:', day.toISODate());
   };
 
@@ -72,7 +104,7 @@ const Calendar = () => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
+      <View style={[typography.flex, styles.header]}>
         <TouchableOpacity onPress={goToPreviousMonth}>
           <Text style={styles.monthButton}>{'<'}</Text>
         </TouchableOpacity>
@@ -91,10 +123,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    width: '100%',
     paddingHorizontal: 20,
     marginBottom: 10,
   },
@@ -134,19 +162,19 @@ const styles = StyleSheet.create({
   weekendDay: {
     backgroundColor: 'lightgray',
   },
-  dot: {
-    borderRadius: 50,
-    marginRight: 7,
-    width: '10%',
-    height: 5,
-  },
-  dot_container: {
+  dotContainer: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    // color: 'black',
     width: '100%',
+    flexWrap: 'wrap',
+  },
+  selectedDay: {
+    backgroundColor: '#8A75FF',
+  },
+  selectedDayText: {
+    color: 'white',
   },
 });
 

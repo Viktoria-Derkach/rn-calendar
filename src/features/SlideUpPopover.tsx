@@ -66,7 +66,7 @@ const SlideUpPopover = ({ children }: PropsWithChildren<{}>) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, styles.marginB]}>
       <TouchableOpacity onPress={showPopover}>{children}</TouchableOpacity>
 
       <Modal isVisible={isModalVisible} onBackdropPress={hidePopover} style={styles.modal}>

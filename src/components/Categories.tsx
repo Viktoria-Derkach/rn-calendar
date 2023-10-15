@@ -66,7 +66,7 @@ const Categories = <T extends {}>({ setFieldValue, initialValue }: CategoriesPro
     setFieldValue('category', category);
   };
   return (
-    <View style={[styles.container]}>
+    <View style={[typography.flex, styles.container]}>
       {categories.map(category => (
         <Category
           key={category.type}
@@ -82,13 +82,7 @@ const Categories = <T extends {}>({ setFieldValue, initialValue }: CategoriesPro
 export default Categories;
 
 const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-  },
+  container: {},
   category: {
     paddingVertical: 10,
     paddingHorizontal: 15,

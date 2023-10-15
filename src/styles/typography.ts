@@ -6,7 +6,6 @@ export const typography = StyleSheet.create({
     fontWeight: '500',
     lineHeight: 20,
     letterSpacing: 0,
-    // textAlign: 'center',
     color: '#222B45',
   },
   greyColor: {
@@ -26,19 +25,17 @@ export const typography = StyleSheet.create({
     alignItems: 'center',
     position: 'relative',
   },
-  // calendarDay: {
-  //   // width: 40,
-  //   height: 40,
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   borderWidth: 1,
-  //   borderColor: 'gray',
-  //   width: '14%',
-  // },
-  // calendarGrid: {
-  //   flexDirection: 'row',
-  //   flexWrap: 'wrap',
-  //   marginTop: 10,
-  //   width: '100%',
-  // },
+  dot: {
+    borderRadius: 50,
+    marginRight: 7,
+    width: 5,
+    height: 5,
+  },
+  flex: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    width: '100%',
+  },
 });

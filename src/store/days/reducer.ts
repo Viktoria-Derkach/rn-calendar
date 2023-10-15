@@ -1,23 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
+import { formatDate } from '../../utils/formatDate';
 
-interface Item {
-  id: string;
-  text: string;
-  category: string; //change
-  time: string;
-  shouldRemind: boolean;
+interface IState {
+  selectedDay: string;
 }
 
-const eventsSlice = createSlice({
-  name: 'events',
-  initialState: [] as Item[],
+const daysSlice = createSlice({
+  name: 'days',
+  initialState: { selectedDay: formatDate(new Date()) } as IState,
   reducers: {
-    addEvent: (state, action: PayloadAction<Item>) => {
-      state.push(action.payload);
+    selectDay: (state, action: PayloadAction<IState['selectedDay']>) => {
+      state.selectedDay = action.payload;
     },
   },
 });
 
-export const { addEvent } = eventsSlice.actions;
-export default eventsSlice.reducer;
+export const { selectDay } = daysSlice.actions;
+export default daysSlice.reducer;

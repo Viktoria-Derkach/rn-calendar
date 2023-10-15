@@ -5,6 +5,7 @@ import { eventAPI } from '../services/EventService';
 
 const rootReducer = combineReducers({
   [eventAPI.reducerPath]: eventAPI.reducer,
+  days: daysReducer,
 });
 
 export const store = configureStore({

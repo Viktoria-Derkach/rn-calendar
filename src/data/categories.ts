@@ -10,7 +10,7 @@ export const categories: ICategory[] = [
     type: 'Workout',
   },
   {
-    color: '#735BF2',
+    color: '#F08080',
     type: 'Brainstorm',
   },
 ];
