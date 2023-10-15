@@ -1,26 +1,31 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-
 import { DateTime } from 'luxon';
+
 import { typography } from './../styles/typography';
 import { useAppDispatch } from '../hooks/useAppDispatch';
 import { selectDay } from '../store/days/reducer';
 import { useAppSelector } from '../hooks/useAppSelector';
+import { IEvent } from '../types/utils';
 
-const Calendar = ({ events }) => {
+const getEvents = (events: IEvent[], day: string): IEvent[] => {
+  const res: IEvent[] = [];
+  events.forEach(el => {
+    if (el.date === day && res.length <= 2) {
+      res.push(el);
+    }
+  });
+  return res;
+};
+
+interface ICalendarProps {
+  events?: IEvent[];
+}
+
+const Calendar = ({ events }: ICalendarProps) => {
   const [currentDate, setCurrentDate] = useState(DateTime.local());
   const dispatch = useAppDispatch();
   const selectedDay = useAppSelector(state => state.days.selectedDay);
-
-  const getEvents = day => {
-    const res = [];
-    events.forEach(el => {
-      if (el.date === day && res.length <= 2) {
-        res.push(el);
-      }
-    });
-    return res;
-  };
 
   const renderWeeks = () => {
     const weeksArray = [];
@@ -28,47 +33,49 @@ const Calendar = ({ events }) => {
     const totalDaysInMonth = firstDayOfMonth.daysInMonth;
     const startOfWeek = firstDayOfMonth.startOf('week');
 
-    let currentWeek = [];
+    let currentWeek: React.ReactNode[] = [];
 
     for (let i = 1; i <= totalDaysInMonth; i++) {
       const day = startOfWeek.set({ day: i, month: currentDate.month });
       const weekDay = day.weekday;
       const isCurrentMonth = day.hasSame(firstDayOfMonth, 'month');
+      const displayDay = day.toISODate();
 
       if (weekDay === 1 || currentWeek.length === 0) {
         // Start a new week on Sunday or when the currentWeek is empty
         currentWeek = [];
+
         weeksArray.push(currentWeek);
       }
 
       currentWeek.push(
         <TouchableOpacity
-          key={day.toISODate()}
-          onPress={() => handleDayPress(day)}
+          key={displayDay}
+          onPress={() => handleDayPress(displayDay)}
           style={[
             styles.dayContainer,
             !isCurrentMonth && styles.nonCurrentMonthDay,
             weekDay >= 6 && styles.weekendDay,
-            selectedDay === day.toISODate() && styles.selectedDay,
+            selectedDay === displayDay && styles.selectedDay,
           ]}
         >
           <Text
             style={[
               styles.dayText,
               !isCurrentMonth && styles.nonCurrentMonthText,
-              selectedDay === day.toISODate() && styles.selectedDayText,
+              selectedDay === displayDay && styles.selectedDayText,
             ]}
           >
             {day.day}
           </Text>
           {!!events?.length && (
             <View style={[styles.dotContainer]}>
-              {getEvents(day.toISODate()).map(el => (
+              {getEvents(events, displayDay).map(el => (
                 <View style={[{ width: '30%' }]}>
                   <View
                     style={[
                       typography.dot,
-                      { backgroundColor: el.category ? el.category.color : 'red' },
+                      { backgroundColor: el.category ? el.category.color : 'yellow' },
                     ]}
                   ></View>
                 </View>
@@ -89,9 +96,8 @@ const Calendar = ({ events }) => {
     ));
   };
 
-  const handleDayPress = day => {
-    dispatch(selectDay(day.toISODate()));
-    console.log('Selected day:', day.toISODate());
+  const handleDayPress = (day: string): void => {
+    dispatch(selectDay(day));
   };
 
   const goToPreviousMonth = () => {

@@ -6,6 +6,7 @@ import Events from '../components/Events';
 import { IEvent } from '../types/utils';
 import { eventAPI } from '../services/EventService';
 import { useAppSelector } from '../hooks/useAppSelector';
+import { typography } from '../styles/typography';
 
 const CalendarScreen = () => {
   const {
@@ -20,7 +21,7 @@ const CalendarScreen = () => {
   const selectedDay = useAppSelector(state => state.days.selectedDay);
 
   return (
-    <View style={styles.container}>
+    <View style={typography.screenContainer}>
       <Calendar events={events ? Object.values(events) : undefined} />
       <SlideUpPopover>
         <View style={styles.circle}>
@@ -32,10 +33,6 @@ const CalendarScreen = () => {
   );
 };
 const styles = StyleSheet.create({
-  container: {
-    margin: 15,
-    flex: 1,
-  },
   circle: {
     width: 50,
     height: 50,

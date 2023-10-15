@@ -38,4 +38,8 @@ export const typography = StyleSheet.create({
     justifyContent: 'space-around',
     width: '100%',
   },
+  screenContainer: {
+    margin: 15,
+    flex: 1,
+  },
 });

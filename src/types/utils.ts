@@ -10,7 +10,7 @@ export interface ICategory {
 
 export interface IEvent {
   category: ICategory | null;
-  date: string | Date;
+  date: string;
   name: string;
   note: string;
   shouldRemindMe: boolean;

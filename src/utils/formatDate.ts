@@ -1,4 +1,4 @@
-export const formatDate = date => {
+export const formatDate = (date: Date): string => {
   const year = date.getFullYear(); // Get the year (e.g., 2023)
   const month = date.getMonth() + 1; // Get the month (0-based, so add 1)
   const day = date.getDate(); // Get the day of the month

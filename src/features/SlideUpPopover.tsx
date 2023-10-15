@@ -143,13 +143,7 @@ const styles = StyleSheet.create({
   marginB: {
     marginBottom: 15,
   },
-  container: {
-    // flex: 1,
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    // color: 'black',
-    // width: 100,
-  },
+  container: {},
   modal: {
     justifyContent: 'flex-end',
     margin: 0,

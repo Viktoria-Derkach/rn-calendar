@@ -8,19 +8,21 @@ import { SerializedError } from '@reduxjs/toolkit';
 
 interface IEventProps {
   event: IEvent;
+  shouldDisplayDate?: boolean;
 }
-const Event = ({ event }: IEventProps) => {
+const Event = ({ event, shouldDisplayDate }: IEventProps) => {
   return (
     <View style={[styles.container]}>
       {event.category && (
-        <View style={[styles.container_category, styles.marginB]}>
-          <View style={[styles.dot, { backgroundColor: event.category?.color }]}></View>
+        <View style={[styles.containerCategory, styles.marginB]}>
+          <View style={[typography.dot, { backgroundColor: event.category?.color }]}></View>
           <Text style={[styles.description]}>{event.category?.type}</Text>
         </View>
       )}
 
       <Text style={[styles.marginB, typography.text]}>{event.name}</Text>
       <Text style={[styles.marginB, styles.description]}>{event.note}</Text>
+      {shouldDisplayDate && <Text style={[styles.marginB, styles.description]}>{event.date}</Text>}
     </View>
   );
 };
@@ -30,11 +32,12 @@ interface IEventsProps {
     [key: string]: IEvent;
   };
   isLoading: boolean;
-  date: string;
+  date?: string;
   error?: FetchBaseQueryError | SerializedError;
+  shouldDisplayDate?: boolean;
 }
 
-const Events = ({ events, error, isLoading, date }: IEventsProps) => {
+const Events = ({ events, error, isLoading, date, shouldDisplayDate }: IEventsProps) => {
   if (isLoading) {
     return <Text style={typography.text}>Loading...</Text>;
   }
@@ -42,14 +45,13 @@ const Events = ({ events, error, isLoading, date }: IEventsProps) => {
     return <Text style={typography.text}>Error fetching events, {JSON.stringify(error)}</Text>;
   }
 
-  console.log(events, 'eventdcvsdsdfgdfccc');
   return (
     <FlatList
       data={Object.values(events)}
       keyExtractor={item => item.id || `${item.date}-${item.date}`}
       renderItem={({ item }) => {
         if (!date || item.date === date) {
-          return <Event event={item} />;
+          return <Event event={item} shouldDisplayDate={shouldDisplayDate} />;
         }
         return null;
       }}
@@ -66,23 +68,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     marginBottom: 15,
     borderRadius: 15,
-    // flex: 1,
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    // color: 'black',
-    // width: 100,
   },
-  container_category: {
+  containerCategory: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
-  },
-  dot: {
-    borderRadius: 50,
-    marginRight: 7,
-    width: 5,
-    height: 5,
   },
   description: {
     fontSize: 12,

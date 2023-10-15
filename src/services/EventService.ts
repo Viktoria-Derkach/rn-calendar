@@ -11,9 +11,11 @@ export const eventAPI = createApi({
   endpoints: build => ({
     fetchAllEvents: build.query({
       query: filterCriteria => {
-        // Build your Firebase query based on the filter criteria here
-        // Example: Filter by category type
-        const query = filterCriteria.date ? `orderBy="date"&equalTo="${filterCriteria.date}"` : '';
+        // const query = filterCriteria.date ? `orderBy="date"&equalTo="${filterCriteria.date}"` : '';
+
+        const query = filterCriteria.shouldRemindMe
+          ? `orderBy="shouldRemindMe"&equalTo=${filterCriteria.shouldRemindMe}`
+          : '';
 
         return `/events.json?${query}`;
       },
