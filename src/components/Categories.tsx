@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { ICategory } from '../types/utils';
 import { typography } from './../styles/typography';
@@ -56,15 +56,18 @@ const Categories = <T extends {}>({ setFieldValue, initialValue }: CategoriesPro
   const [selected, setSelected] = useState<ICategory | null>(initialValue);
   const [isSelected, setIsSelected] = useState(false);
 
-  const handlePress = (category: ICategory): void => {
-    setIsSelected(!isSelected);
-    if (isSelected || (selected && selected.type !== category.type)) {
-      setSelected(category);
-    } else {
-      setSelected(null);
-    }
-    setFieldValue('category', category);
-  };
+  const handlePress = useCallback(
+    (category: ICategory): void => {
+      setIsSelected(!isSelected);
+      if (isSelected || (selected && selected.type !== category.type)) {
+        setSelected(category);
+      } else {
+        setSelected(null);
+      }
+      setFieldValue('category', category);
+    },
+    [isSelected, selected, setFieldValue]
+  );
   return (
     <View style={[typography.flex, styles.container]}>
       {categories.map(category => (

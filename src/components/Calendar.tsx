@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState, ReactNode } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { DateTime } from 'luxon';
 
@@ -27,13 +27,17 @@ const Calendar = ({ events }: ICalendarProps) => {
   const dispatch = useAppDispatch();
   const selectedDay = useAppSelector(state => state.days.selectedDay);
 
-  const renderWeeks = () => {
+  const handleDayPress = (day: string): void => {
+    dispatch(selectDay(day));
+  };
+
+  const renderWeeks = useCallback(() => {
     const weeksArray = [];
     const firstDayOfMonth = currentDate.startOf('month');
     const totalDaysInMonth = firstDayOfMonth.daysInMonth;
     const startOfWeek = firstDayOfMonth.startOf('week');
 
-    let currentWeek: React.ReactNode[] = [];
+    let currentWeek: ReactNode[] = [];
 
     for (let i = 1; i <= totalDaysInMonth; i++) {
       const day = startOfWeek.set({ day: i, month: currentDate.month });
@@ -94,11 +98,7 @@ const Calendar = ({ events }: ICalendarProps) => {
         {week}
       </View>
     ));
-  };
-
-  const handleDayPress = (day: string): void => {
-    dispatch(selectDay(day));
-  };
+  }, [currentDate, events, handleDayPress, selectedDay]);
 
   const goToPreviousMonth = () => {
     setCurrentDate(currentDate.minus({ months: 1 }));

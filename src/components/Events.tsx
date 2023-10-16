@@ -30,7 +30,7 @@ const Events = ({ events, error, isLoading, date, shouldDisplayDate }: IEventsPr
         id,
         ...events[id],
       }))}
-      keyExtractor={item => item.id || `${item.date}-${item.date}`}
+      keyExtractor={item => item.id}
       renderItem={({ item }) => {
         if (!date || item.date === date) {
           return <Event event={item} shouldDisplayDate={shouldDisplayDate} />;

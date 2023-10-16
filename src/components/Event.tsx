@@ -12,7 +12,7 @@ interface IEventProps {
 const Event = ({ event, shouldDisplayDate }: IEventProps) => {
   const [deleteEvent, {}] = eventAPI.useDeleteEventMutation();
 
-  const removeHandler = () => {
+  const removeHandler = (): void => {
     Alert.alert(
       'Delete a post',
       'Do you want to delete a post?',
