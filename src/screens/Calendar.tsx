@@ -23,24 +23,20 @@ const CalendarScreen = () => {
   return (
     <View style={typography.screenContainer}>
       <Calendar events={events ? Object.values(events) : undefined} />
-      <SlideUpPopover>
-        <View style={styles.circle}>
-          <Text style={styles.plus}>+</Text>
-        </View>
-      </SlideUpPopover>
-      <Events isLoading={isLoading} error={error} events={events} date={selectedDay} />
+      <View style={[{ alignItems: 'center' }]}>
+        <SlideUpPopover>
+          <View style={typography.circle}>
+            <Text style={styles.plus}>+</Text>
+          </View>
+        </SlideUpPopover>
+      </View>
+      <View>
+        <Events isLoading={isLoading} error={error} events={events} date={selectedDay} />
+      </View>
     </View>
   );
 };
 const styles = StyleSheet.create({
-  circle: {
-    width: 50,
-    height: 50,
-    backgroundColor: '#735BF2',
-    borderRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   plus: {
     fontSize: 30,
     color: 'white',

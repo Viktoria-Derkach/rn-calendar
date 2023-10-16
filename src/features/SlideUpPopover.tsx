@@ -16,8 +16,10 @@ import DayPicker from '../components/DayPicker';
 import { typography } from '../styles/typography';
 import Categories from '../components/Categories';
 import { eventAPI } from '../services/EventService';
-import { CategoryType, IEvent } from '../types/utils';
+import { IEvent } from '../types/utils';
 import { formatDate } from '../utils/formatDate';
+import { StyleProp } from 'react-native';
+import { ViewStyle } from 'react-native';
 
 const initialValues: IEvent = {
   name: '',
@@ -27,7 +29,11 @@ const initialValues: IEvent = {
   category: null,
 };
 
-const SlideUpPopover = ({ children }: PropsWithChildren<{}>) => {
+interface ISlideUpPopoverProps {
+  style?: StyleProp<ViewStyle>;
+}
+
+const SlideUpPopover = ({ children, style }: PropsWithChildren<ISlideUpPopoverProps>) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const translateY = useSharedValue(500);
   const translateYOffset = useSharedValue(500);
@@ -67,7 +73,9 @@ const SlideUpPopover = ({ children }: PropsWithChildren<{}>) => {
 
   return (
     <View style={[styles.container, styles.marginB]}>
-      <TouchableOpacity onPress={showPopover}>{children}</TouchableOpacity>
+      <TouchableOpacity style={[style]} onPress={showPopover}>
+        {children}
+      </TouchableOpacity>
 
       <Modal isVisible={isModalVisible} onBackdropPress={hidePopover} style={styles.modal}>
         <Animated.View style={[styles.modalContent, animatedStyle]}>
@@ -105,11 +113,13 @@ const SlideUpPopover = ({ children }: PropsWithChildren<{}>) => {
                   <DayPicker setFieldValue={setFieldValue} />
                 </View>
 
-                <View style={[styles.container_switch, styles.marginB, { width: '100%' }]}>
+                <View
+                  style={[typography.flex, styles.marginB, { justifyContent: 'space-between' }]}
+                >
                   <View style={[{ width: '50%' }]}>
                     <Text style={[typography.text, { width: '70%' }]}>Reminds me</Text>
                   </View>
-                  <View style={[styles.switch, { width: '20%' }]}>
+                  <View style={[{ width: '20%' }]}>
                     <Switch
                       trackColor={{ false: '#CED3DE', true: '#735BF2' }}
                       thumbColor={values.shouldRemindMe ? '#FFFFFF' : '#FFFFFF'}
@@ -177,14 +187,6 @@ const styles = StyleSheet.create({
     color: '#8F9BB3',
     borderColor: '#8F9BB3',
   },
-  container_switch: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
-  },
-  switch: {},
 });
 
 export default SlideUpPopover;

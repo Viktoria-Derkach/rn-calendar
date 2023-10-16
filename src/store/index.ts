@@ -1,5 +1,4 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import thunkMiddleware from 'redux-thunk';
 import daysReducer from './days/reducer';
 import { eventAPI } from '../services/EventService';
 

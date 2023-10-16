@@ -8,22 +8,13 @@ export const typography = StyleSheet.create({
     letterSpacing: 0,
     color: '#222B45',
   },
-  greyColor: {
-    color: '#8F9BB3',
-  },
-  todays: {
-    transformOrigin: 'center',
-    color: '#FFFFFF',
-  },
   circle: {
-    width: 30,
-    height: 30,
+    width: 50,
+    height: 50,
     backgroundColor: '#735BF2',
-    borderRadius: 50,
-    display: 'flex',
-    justifyContent: 'center',
+    borderRadius: 25,
     alignItems: 'center',
-    position: 'relative',
+    justifyContent: 'center',
   },
   dot: {
     borderRadius: 50,
