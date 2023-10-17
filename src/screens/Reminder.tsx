@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { RefreshControl, ScrollView } from 'react-native';
 import { eventAPI } from '../services/EventService';
 import Events from '../components/Events';
@@ -16,7 +16,7 @@ const Reminder = () => {
 
   const [refreshing, setRefreshing] = React.useState(false);
 
-  const onRefresh = React.useCallback(async () => {
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await refetch();
     setRefreshing(false);

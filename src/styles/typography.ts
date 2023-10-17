@@ -13,6 +13,11 @@ export const typography = StyleSheet.create({
     fontWeight: '400',
     lineHeight: 14,
   },
+  bigText: {
+    fontSize: 20,
+    fontWeight: '500',
+    color: '#222B45',
+  },
   circle: {
     width: 50,
     height: 50,

@@ -8,6 +8,8 @@ import { selectDay } from '../store/days/reducer';
 import { useAppSelector } from '../hooks/useAppSelector';
 import { IEvent } from '../types/utils';
 
+const dayOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
 const getEvents = (events: IEvent[], day: string): IEvent[] => {
   const res: IEvent[] = [];
   events.forEach(el => {
@@ -72,7 +74,7 @@ const Calendar = ({ events }: ICalendarProps) => {
             {day.day}
           </Text>
           {!!events?.length && (
-            <View style={[styles.dotContainer]}>
+            <View style={[typography.flex, styles.dotContainer]}>
               {getEvents(events, displayDay).map(el => (
                 <View style={[{ width: '30%' }]}>
                   <View
@@ -111,13 +113,16 @@ const Calendar = ({ events }: ICalendarProps) => {
     <View style={styles.container}>
       <View style={[typography.flex, styles.header]}>
         <TouchableOpacity onPress={goToPreviousMonth}>
-          <Text style={styles.monthButton}>{'<'}</Text>
+          <Text style={typography.bigText}>{'<'}</Text>
         </TouchableOpacity>
-        <Text style={styles.monthText}>{currentDate.setLocale('en-US').toFormat('MMMM yyyy')}</Text>
+        <Text style={[typography.bigText]}>
+          {currentDate.setLocale('en-US').toFormat('MMMM yyyy')}
+        </Text>
         <TouchableOpacity onPress={goToNextMonth}>
-          <Text style={styles.monthButton}>{'>'}</Text>
+          <Text style={typography.bigText}>{'>'}</Text>
         </TouchableOpacity>
       </View>
+      <View style={styles.calendarContainer}></View>
       <View style={styles.calendarContainer}>{renderWeeks()}</View>
     </View>
   );
@@ -130,14 +135,6 @@ const styles = StyleSheet.create({
   header: {
     paddingHorizontal: 20,
     marginBottom: 10,
-  },
-  monthButton: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  monthText: {
-    fontSize: 20,
-    fontWeight: 'bold',
   },
   calendarContainer: {
     flexDirection: 'column',
@@ -168,11 +165,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'lightgray',
   },
   dotContainer: {
-    display: 'flex',
-    flexDirection: 'row',
     justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
     flexWrap: 'wrap',
   },
   selectedDay: {
