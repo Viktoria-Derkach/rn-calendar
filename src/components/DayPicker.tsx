@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import DateTimePicker, {
   DateTimePickerEvent,
   DateTimePickerAndroid,
+  AndroidNativeProps,
 } from '@react-native-community/datetimepicker';
 import { FormikErrors } from 'formik';
-import { Platform } from 'react-native';
+import { Platform, Text, View, Button } from 'react-native';
 import { formatDate } from '../utils/formatDate';
+import { typography } from '../styles/typography';
 
 interface Props {
   setFieldValue: (
@@ -25,18 +27,29 @@ const DayPicker = ({ setFieldValue }: Props) => {
       setFieldValue('date', formatDate(selectedDate));
     }
   };
-  if (Platform.OS === 'android') {
-    return;
-  }
 
+  const pickerProps: AndroidNativeProps = {
+    value: date,
+    mode: 'date',
+    is24Hour: true,
+    onChange: onChange,
+    display: 'calendar',
+    testID: 'dateTimePicker',
+  };
+
+  const onShowDatePicker = () => {
+    DateTimePickerAndroid.open({ ...pickerProps });
+  };
   return (
-    <DateTimePicker
-      testID="dateTimePicker"
-      value={date}
-      mode={'date'}
-      is24Hour={true}
-      onChange={onChange}
-    />
+    <>
+      {Platform.OS !== 'android' && <DateTimePicker {...pickerProps} />}
+      {Platform.OS === 'android' && (
+        <View style={[typography.flex, { justifyContent: 'space-between' }]}>
+          <Text style={[typography.smallText]}>Selected date: {formatDate(date)}</Text>
+          <Button title="Choose date" color="#735BF2" onPress={onShowDatePicker} />
+        </View>
+      )}
+    </>
   );
 };
 
