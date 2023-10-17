@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
-import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import DateTimePicker, {
+  DateTimePickerEvent,
+  DateTimePickerAndroid,
+} from '@react-native-community/datetimepicker';
 import { FormikErrors } from 'formik';
+import { Platform } from 'react-native';
 import { formatDate } from '../utils/formatDate';
 
 interface Props {
@@ -8,7 +12,7 @@ interface Props {
     field: string,
     value: any,
     shouldValidate?: boolean
-  ) => Promise<void | FormikErrors<T>>;
+  ) => Promise<void | FormikErrors<unknown>>;
 }
 
 const DayPicker = ({ setFieldValue }: Props) => {
@@ -21,6 +25,9 @@ const DayPicker = ({ setFieldValue }: Props) => {
       setFieldValue('date', formatDate(selectedDate));
     }
   };
+  if (Platform.OS === 'android') {
+    return;
+  }
 
   return (
     <DateTimePicker

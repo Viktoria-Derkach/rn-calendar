@@ -8,6 +8,11 @@ export const typography = StyleSheet.create({
     letterSpacing: 0,
     color: '#222B45',
   },
+  smallText: {
+    fontSize: 12,
+    fontWeight: '400',
+    lineHeight: 14,
+  },
   circle: {
     width: 50,
     height: 50,

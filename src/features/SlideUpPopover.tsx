@@ -20,6 +20,7 @@ import { IEvent } from '../types/utils';
 import { formatDate } from '../utils/formatDate';
 import { StyleProp } from 'react-native';
 import { ViewStyle } from 'react-native';
+import * as Yup from 'yup';
 
 const initialValues: IEvent = {
   name: '',
@@ -28,6 +29,11 @@ const initialValues: IEvent = {
   shouldRemindMe: false,
   category: null,
 };
+
+const CreateNoteSchema = Yup.object().shape({
+  name: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Required'),
+  note: Yup.string().min(2, 'Too Short!').max(500, 'Too Long!'),
+});
 
 interface ISlideUpPopoverProps {
   style?: StyleProp<ViewStyle>;
@@ -60,7 +66,7 @@ const SlideUpPopover = ({ children, style }: PropsWithChildren<ISlideUpPopoverPr
     try {
       await createEvent(values);
       Alert.alert('Event created', '', [], { cancelable: true });
-      console.log(values);
+      hidePopover();
     } catch (error) {
       console.error('Error adding event', error);
     }
@@ -68,7 +74,6 @@ const SlideUpPopover = ({ children, style }: PropsWithChildren<ISlideUpPopoverPr
 
   const onSubmit = (submit: () => void) => {
     submit();
-    hidePopover();
   };
 
   return (
@@ -81,34 +86,59 @@ const SlideUpPopover = ({ children, style }: PropsWithChildren<ISlideUpPopoverPr
         <Animated.View style={[styles.modalContent, animatedStyle]}>
           <View style={styles.draggableHandle} />
           <Text style={[styles.title, styles.marginB]}>Add New Event</Text>
-          <Formik initialValues={initialValues} onSubmit={createEventOnSubmit}>
-            {({ handleChange, handleBlur, handleSubmit, values, setFieldValue }) => (
+          <Formik
+            initialValues={initialValues}
+            onSubmit={createEventOnSubmit}
+            validationSchema={CreateNoteSchema}
+            validateOnChange={false}
+            validateOnBlur={false}
+          >
+            {({
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              values,
+              setFieldValue,
+            }) => (
               <>
-                <TextInput
-                  style={[styles.input, styles.marginB]}
-                  onChangeText={handleChange('name')}
-                  onBlur={handleBlur('name')}
-                  value={values.name}
-                  placeholder="Event name"
-                  autoFocus
-                  enterKeyHint="next"
-                  inputMode="text"
-                  placeholderTextColor="#8F9BB3"
-                />
-                <TextInput
-                  editable
-                  multiline
-                  numberOfLines={4}
-                  maxLength={40}
-                  onChangeText={handleChange('note')}
-                  onBlur={handleBlur('note')}
-                  value={values.note}
-                  style={[styles.input, styles.marginB, { minHeight: 90 }]}
-                  enterKeyHint="next"
-                  inputMode="text"
-                  placeholderTextColor="#8F9BB3"
-                  placeholder="Type the note here..."
-                />
+                <View style={styles.marginB}>
+                  <TextInput
+                    style={[styles.input]}
+                    onChangeText={handleChange('name')}
+                    onBlur={handleBlur('name')}
+                    value={values.name}
+                    placeholder="Event name"
+                    autoFocus
+                    enterKeyHint="next"
+                    inputMode="text"
+                    placeholderTextColor="#8F9BB3"
+                  />
+                  {errors.name && touched.name ? (
+                    <Text style={[typography.smallText, { color: 'red' }]}>{errors.name}</Text>
+                  ) : null}
+                </View>
+                <View style={styles.marginB}>
+                  <TextInput
+                    editable
+                    multiline
+                    numberOfLines={4}
+                    maxLength={40}
+                    onChangeText={handleChange('note')}
+                    onBlur={handleBlur('note')}
+                    value={values.note}
+                    style={[styles.input, { minHeight: 90 }]}
+                    enterKeyHint="next"
+                    inputMode="text"
+                    placeholderTextColor="#8F9BB3"
+                    placeholder="Type the note here..."
+                  />
+                  {errors.note && (
+                    <Text style={[typography.smallText, { color: 'red' }]}>{errors.note}</Text>
+                  )}
+                </View>
+
                 <View style={[styles.marginB]}>
                   <DayPicker setFieldValue={setFieldValue} />
                 </View>

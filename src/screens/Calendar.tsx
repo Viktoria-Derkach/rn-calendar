@@ -30,9 +30,7 @@ const CalendarScreen = () => {
           </View>
         </SlideUpPopover>
       </View>
-      <View>
-        <Events isLoading={isLoading} error={error} events={events} date={selectedDay} />
-      </View>
+      <Events isLoading={isLoading} error={error} events={events} date={selectedDay} />
     </View>
   );
 };

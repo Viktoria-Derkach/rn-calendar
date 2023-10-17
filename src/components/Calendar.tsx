@@ -31,7 +31,7 @@ const Calendar = ({ events }: ICalendarProps) => {
     dispatch(selectDay(day));
   };
 
-  const renderWeeks = useCallback(() => {
+  const renderWeeks = useCallback((): JSX.Element[] => {
     const weeksArray = [];
     const firstDayOfMonth = currentDate.startOf('month');
     const totalDaysInMonth = firstDayOfMonth.daysInMonth;
@@ -46,7 +46,6 @@ const Calendar = ({ events }: ICalendarProps) => {
       const displayDay = day.toISODate();
 
       if (weekDay === 1 || currentWeek.length === 0) {
-        // Start a new week on Sunday or when the currentWeek is empty
         currentWeek = [];
 
         weeksArray.push(currentWeek);
@@ -100,11 +99,11 @@ const Calendar = ({ events }: ICalendarProps) => {
     ));
   }, [currentDate, events, handleDayPress, selectedDay]);
 
-  const goToPreviousMonth = () => {
+  const goToPreviousMonth = (): void => {
     setCurrentDate(currentDate.minus({ months: 1 }));
   };
 
-  const goToNextMonth = () => {
+  const goToNextMonth = (): void => {
     setCurrentDate(currentDate.plus({ months: 1 }));
   };
 
@@ -146,7 +145,7 @@ const styles = StyleSheet.create({
   },
   weekContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between', // Align days of the week horizontally
+    justifyContent: 'space-between',
   },
   dayContainer: {
     width: 50,

@@ -44,6 +44,7 @@ const Category = ({ category, selected, handlePress }: CategoryProps) => {
     </TouchableOpacity>
   );
 };
+
 interface CategoriesProps<T> {
   initialValue: null;
   setFieldValue: (
@@ -52,6 +53,7 @@ interface CategoriesProps<T> {
     shouldValidate?: boolean
   ) => Promise<void | FormikErrors<T>>;
 }
+
 const Categories = <T extends {}>({ setFieldValue, initialValue }: CategoriesProps<T>) => {
   const [selected, setSelected] = useState<ICategory | null>(initialValue);
   const [isSelected, setIsSelected] = useState(false);
@@ -69,7 +71,7 @@ const Categories = <T extends {}>({ setFieldValue, initialValue }: CategoriesPro
     [isSelected, selected, setFieldValue]
   );
   return (
-    <View style={[typography.flex, styles.container]}>
+    <View style={[typography.flex]}>
       {categories.map(category => (
         <Category
           key={category.type}
@@ -85,7 +87,6 @@ const Categories = <T extends {}>({ setFieldValue, initialValue }: CategoriesPro
 export default Categories;
 
 const styles = StyleSheet.create({
-  container: {},
   category: {
     paddingVertical: 10,
     paddingHorizontal: 15,

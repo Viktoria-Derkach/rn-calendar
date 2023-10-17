@@ -1,10 +1,8 @@
 import React, { useState, useCallback } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
 import AppLoading from 'expo-app-loading';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { Provider } from 'react-redux';
-import { calendarObject } from './src/utils/date';
 import { store } from './src/store';
 import AppNavigation from './src/navigation/AppNavigation';
 import { NavigationContainer } from '@react-navigation/native';

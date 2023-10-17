@@ -37,13 +37,17 @@ const Event = ({ event, shouldDisplayDate }: IEventProps) => {
       {event.category && (
         <View style={[styles.containerCategory, styles.marginB]}>
           <View style={[typography.dot, { backgroundColor: event.category?.color }]}></View>
-          <Text style={[styles.description]}>{event.category?.type}</Text>
+          <Text style={[styles.description, typography.smallText]}>{event.category?.type}</Text>
         </View>
       )}
 
       <Text style={[styles.marginB, typography.text]}>{event.name}</Text>
-      <Text style={[styles.marginB, styles.description]}>{event.note}</Text>
-      {shouldDisplayDate && <Text style={[styles.marginB, styles.description]}>{event.date}</Text>}
+      {event.note && (
+        <Text style={[styles.marginB, styles.description, typography.smallText]}>{event.note}</Text>
+      )}
+      {shouldDisplayDate && (
+        <Text style={[styles.marginB, styles.description, typography.smallText]}>{event.date}</Text>
+      )}
       <Button title="Delete" color={'red'} onPress={removeHandler} />
     </View>
   );
@@ -66,9 +70,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   description: {
-    fontSize: 12,
-    fontWeight: '400',
-    lineHeight: 14,
     letterSpacing: 0.75,
     color: '#8F9BB3',
   },
