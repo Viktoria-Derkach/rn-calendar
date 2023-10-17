@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text } from 'react-native';
+import { RefreshControl, ScrollView } from 'react-native';
 import { eventAPI } from '../services/EventService';
 import Events from '../components/Events';
 import { typography } from '../styles/typography';
@@ -11,12 +11,24 @@ const Reminder = () => {
     isLoading,
     refetch,
   } = eventAPI.useFetchAllEventsQuery({
-    shouldRemindMe: true, // Replace with your filter criteria
+    shouldRemindMe: true,
   });
+
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(async () => {
+    setRefreshing(true);
+    await refetch();
+    setRefreshing(false);
+  }, [refetch]);
+
   return (
-    <View style={typography.screenContainer}>
+    <ScrollView
+      contentContainerStyle={[typography.screenContainer]}
+      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+    >
       <Events isLoading={isLoading} error={error} events={events} shouldDisplayDate />
-    </View>
+    </ScrollView>
   );
 };
 
