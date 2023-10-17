@@ -110,8 +110,8 @@ const Calendar = ({ events }: ICalendarProps) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={[typography.flex, styles.header]}>
+    <View style={[styles.container]}>
+      <View style={[typography.flex, styles.header, typography.marginB]}>
         <TouchableOpacity onPress={goToPreviousMonth}>
           <Text style={typography.bigText}>{'<'}</Text>
         </TouchableOpacity>
@@ -122,7 +122,11 @@ const Calendar = ({ events }: ICalendarProps) => {
           <Text style={typography.bigText}>{'>'}</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.calendarContainer}></View>
+      <View style={[typography.flex, typography.marginB]}>
+        {dayOfWeek.map(el => (
+          <Text style={[typography.smallText, { color: '#8F9BB3' }]}>{el}</Text>
+        ))}
+      </View>
       <View style={styles.calendarContainer}>{renderWeeks()}</View>
     </View>
   );
@@ -134,7 +138,6 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 20,
-    marginBottom: 10,
   },
   calendarContainer: {
     flexDirection: 'column',

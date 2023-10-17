@@ -77,7 +77,7 @@ const SlideUpPopover = ({ children, style }: PropsWithChildren<ISlideUpPopoverPr
   };
 
   return (
-    <View style={[styles.container, styles.marginB]}>
+    <View style={[typography.marginB]}>
       <TouchableOpacity style={[style]} onPress={showPopover}>
         {children}
       </TouchableOpacity>
@@ -85,7 +85,7 @@ const SlideUpPopover = ({ children, style }: PropsWithChildren<ISlideUpPopoverPr
       <Modal isVisible={isModalVisible} onBackdropPress={hidePopover} style={styles.modal}>
         <Animated.View style={[styles.modalContent, animatedStyle]}>
           <View style={styles.draggableHandle} />
-          <Text style={[styles.title, styles.marginB]}>Add New Event</Text>
+          <Text style={[styles.title, typography.marginB]}>Add New Event</Text>
           <Formik
             initialValues={initialValues}
             onSubmit={createEventOnSubmit}
@@ -103,7 +103,7 @@ const SlideUpPopover = ({ children, style }: PropsWithChildren<ISlideUpPopoverPr
               setFieldValue,
             }) => (
               <>
-                <View style={styles.marginB}>
+                <View style={typography.marginB}>
                   <TextInput
                     style={[styles.input]}
                     onChangeText={handleChange('name')}
@@ -119,7 +119,7 @@ const SlideUpPopover = ({ children, style }: PropsWithChildren<ISlideUpPopoverPr
                     <Text style={[typography.smallText, { color: 'red' }]}>{errors.name}</Text>
                   ) : null}
                 </View>
-                <View style={styles.marginB}>
+                <View style={typography.marginB}>
                   <TextInput
                     editable
                     multiline
@@ -139,12 +139,12 @@ const SlideUpPopover = ({ children, style }: PropsWithChildren<ISlideUpPopoverPr
                   )}
                 </View>
 
-                <View style={[styles.marginB]}>
+                <View style={[typography.marginB]}>
                   <DayPicker setFieldValue={setFieldValue} />
                 </View>
 
                 <View
-                  style={[typography.flex, styles.marginB, { justifyContent: 'space-between' }]}
+                  style={[typography.flex, typography.marginB, { justifyContent: 'space-between' }]}
                 >
                   <View style={[{ width: '50%' }]}>
                     <Text style={[typography.text, { width: '70%' }]}>Reminds me</Text>
@@ -160,14 +160,14 @@ const SlideUpPopover = ({ children, style }: PropsWithChildren<ISlideUpPopoverPr
                   </View>
                 </View>
 
-                <View style={[styles.marginB]}>
-                  <Text style={[typography.text, styles.marginB, { fontSize: 17 }]}>
+                <View style={[typography.marginB]}>
+                  <Text style={[typography.text, typography.marginB, { fontSize: 17 }]}>
                     Select Catgeory
                   </Text>
                   <Categories initialValue={values.category} setFieldValue={setFieldValue} />
                 </View>
 
-                <View style={styles.marginB}>
+                <View style={typography.marginB}>
                   <Button color="#735BF2" onPress={() => onSubmit(handleSubmit)} title="Submit" />
                 </View>
               </>
@@ -180,10 +180,6 @@ const SlideUpPopover = ({ children, style }: PropsWithChildren<ISlideUpPopoverPr
 };
 
 const styles = StyleSheet.create({
-  marginB: {
-    marginBottom: 15,
-  },
-  container: {},
   modal: {
     justifyContent: 'flex-end',
     margin: 0,

@@ -43,4 +43,7 @@ export const typography = StyleSheet.create({
     margin: 15,
     flex: 1,
   },
+  marginB: {
+    marginBottom: 15,
+  },
 });
