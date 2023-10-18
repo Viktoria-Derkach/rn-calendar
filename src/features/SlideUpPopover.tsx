@@ -1,4 +1,4 @@
-import React, { useState, PropsWithChildren } from 'react';
+import React, { useState, PropsWithChildren, useMemo, ReactNode } from 'react';
 import {
   View,
   Text,
@@ -18,11 +18,9 @@ import Categories from '../components/Categories';
 import { eventAPI } from '../services/EventService';
 import { IEvent } from '../types/utils';
 import { formatDate } from '../utils/formatDate';
-import { StyleProp } from 'react-native';
-import { ViewStyle } from 'react-native';
 import * as Yup from 'yup';
 
-const initialValues: IEvent = {
+const defaultInitialValues: IEvent = {
   name: '',
   note: '',
   date: formatDate(new Date()),
@@ -36,16 +34,24 @@ const CreateNoteSchema = Yup.object().shape({
 });
 
 interface ISlideUpPopoverProps {
-  style?: StyleProp<ViewStyle>;
+  updateValues?: IEvent;
+  children: ({ showPopover }: { showPopover: () => void }) => ReactNode;
 }
 
-const SlideUpPopover = ({ children, style }: PropsWithChildren<ISlideUpPopoverProps>) => {
+const SlideUpPopover = ({ updateValues, children }: ISlideUpPopoverProps) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const translateY = useSharedValue(500);
   const translateYOffset = useSharedValue(500);
   const [createEvent, {}] = eventAPI.useCreateEventMutation();
 
-  const showPopover = () => {
+  const initialValues = useMemo(() => {
+    if (!updateValues) {
+      return { ...defaultInitialValues };
+    }
+    return { ...updateValues };
+  }, [updateValues]);
+
+  const showPopover = (): void => {
     setModalVisible(true);
     translateY.value = withTiming(2);
   };
@@ -66,6 +72,8 @@ const SlideUpPopover = ({ children, style }: PropsWithChildren<ISlideUpPopoverPr
     try {
       await createEvent(values);
       Alert.alert('Event created', '', [], { cancelable: true });
+      console.log(values, 'values');
+
       hidePopover();
     } catch (error) {
       console.error('Error adding event', error);
@@ -78,9 +86,7 @@ const SlideUpPopover = ({ children, style }: PropsWithChildren<ISlideUpPopoverPr
 
   return (
     <View style={[typography.marginB]}>
-      <TouchableOpacity style={[style]} onPress={showPopover}>
-        {children}
-      </TouchableOpacity>
+      <View>{children({ showPopover })}</View>
 
       <Modal isVisible={isModalVisible} onBackdropPress={hidePopover} style={styles.modal}>
         <Animated.View style={[styles.modalContent, animatedStyle]}>
@@ -140,7 +146,7 @@ const SlideUpPopover = ({ children, style }: PropsWithChildren<ISlideUpPopoverPr
                 </View>
 
                 <View style={[typography.marginB]}>
-                  <DayPicker setFieldValue={setFieldValue} />
+                  <DayPicker setFieldValue={setFieldValue} initialDate={values.date} />
                 </View>
 
                 <View
@@ -162,7 +168,7 @@ const SlideUpPopover = ({ children, style }: PropsWithChildren<ISlideUpPopoverPr
 
                 <View style={[typography.marginB]}>
                   <Text style={[typography.text, typography.marginB, { fontSize: 17 }]}>
-                    Select Catgeory
+                    Select Category
                   </Text>
                   <Categories initialValue={values.category} setFieldValue={setFieldValue} />
                 </View>

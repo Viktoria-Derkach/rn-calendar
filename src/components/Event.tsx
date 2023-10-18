@@ -4,6 +4,7 @@ import { View, Text, StyleSheet, Button, Alert } from 'react-native';
 import { eventAPI } from '../services/EventService';
 import { IEvent } from '../types/utils';
 import { typography } from '../styles/typography';
+import SlideUpPopover from '../features/SlideUpPopover';
 
 interface IEventProps {
   event: IEvent;
@@ -48,6 +49,9 @@ const Event = ({ event, shouldDisplayDate }: IEventProps) => {
       {shouldDisplayDate && (
         <Text style={[styles.marginB, styles.description, typography.smallText]}>{event.date}</Text>
       )}
+      <SlideUpPopover updateValues={event}>
+        {({ showPopover }) => <Button title="Update" color={'purple'} onPress={showPopover} />}
+      </SlideUpPopover>
       <Button title="Delete" color={'red'} onPress={removeHandler} />
     </View>
   );

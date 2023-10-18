@@ -46,7 +46,7 @@ const Category = ({ category, selected, handlePress }: CategoryProps) => {
 };
 
 interface CategoriesProps<T> {
-  initialValue: null;
+  initialValue: null | ICategory;
   setFieldValue: (
     field: string,
     value: any,

@@ -7,8 +7,7 @@ import { useAppDispatch } from '../hooks/useAppDispatch';
 import { selectDay } from '../store/days/reducer';
 import { useAppSelector } from '../hooks/useAppSelector';
 import { IEvent } from '../types/utils';
-
-const dayOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+import DayOfWeek from './DayOfWeek';
 
 const getEvents = (events: IEvent[], day: string): IEvent[] => {
   const res: IEvent[] = [];
@@ -122,11 +121,7 @@ const Calendar = ({ events }: ICalendarProps) => {
           <Text style={typography.bigText}>{'>'}</Text>
         </TouchableOpacity>
       </View>
-      <View style={[typography.flex, typography.marginB]}>
-        {dayOfWeek.map(el => (
-          <Text style={[typography.smallText, { color: '#8F9BB3' }]}>{el}</Text>
-        ))}
-      </View>
+      <DayOfWeek />
       <View style={styles.calendarContainer}>{renderWeeks()}</View>
     </View>
   );

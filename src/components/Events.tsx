@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Text, FlatList } from 'react-native';
 import { IEvent } from '../types/utils';
 import { typography } from '../styles/typography';
@@ -24,12 +24,17 @@ const Events = ({ events, error, isLoading, date, shouldDisplayDate }: IEventsPr
     return <Text style={typography.text}>Error fetching events, {JSON.stringify(error)}</Text>;
   }
 
-  return (
-    <FlatList
-      data={Object.keys(events).map(id => ({
+  const eventsArray = useMemo(
+    () =>
+      Object.keys(events).map(id => ({
         id,
         ...events[id],
-      }))}
+      })),
+    [events]
+  );
+  return (
+    <FlatList
+      data={eventsArray}
       keyExtractor={item => item.id}
       renderItem={({ item }) => {
         if (!date || item.date === date) {

@@ -8,8 +8,10 @@ import { FormikErrors } from 'formik';
 import { Platform, Text, View, Button } from 'react-native';
 import { formatDate } from '../utils/formatDate';
 import { typography } from '../styles/typography';
+import { convertDateStringToDateTime } from '../utils/convertStringToDate';
 
 interface Props {
+  initialDate: any;
   setFieldValue: (
     field: string,
     value: any,
@@ -17,8 +19,8 @@ interface Props {
   ) => Promise<void | FormikErrors<unknown>>;
 }
 
-const DayPicker = ({ setFieldValue }: Props) => {
-  const [date, setDate] = useState(new Date());
+const DayPicker = ({ setFieldValue, initialDate }: Props) => {
+  const [date, setDate] = useState(convertDateStringToDateTime(initialDate));
 
   const onChange = (event: DateTimePickerEvent, selectedDate: Date | undefined): void => {
     if (selectedDate) {
