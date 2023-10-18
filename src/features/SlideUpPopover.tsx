@@ -43,6 +43,7 @@ const SlideUpPopover = ({ updateValues, children }: ISlideUpPopoverProps) => {
   const translateY = useSharedValue(500);
   const translateYOffset = useSharedValue(500);
   const [createEvent, {}] = eventAPI.useCreateEventMutation();
+  const [updateEvent, {}] = eventAPI.useUpdateEventMutation();
 
   const initialValues = useMemo(() => {
     if (!updateValues) {
@@ -68,11 +69,21 @@ const SlideUpPopover = ({ updateValues, children }: ISlideUpPopoverProps) => {
     };
   });
 
+  const updateEventOnSubmit = async (values: IEvent) => {
+    try {
+      await updateEvent(values);
+      Alert.alert('Event updated', '', [], { cancelable: true });
+
+      hidePopover();
+    } catch (error) {
+      console.error('Error updating event', error);
+    }
+  };
+
   const createEventOnSubmit = async (values: IEvent) => {
     try {
       await createEvent(values);
       Alert.alert('Event created', '', [], { cancelable: true });
-      console.log(values, 'values');
 
       hidePopover();
     } catch (error) {
@@ -94,7 +105,7 @@ const SlideUpPopover = ({ updateValues, children }: ISlideUpPopoverProps) => {
           <Text style={[styles.title, typography.marginB]}>Add New Event</Text>
           <Formik
             initialValues={initialValues}
-            onSubmit={createEventOnSubmit}
+            onSubmit={updateValues ? updateEventOnSubmit : createEventOnSubmit}
             validationSchema={CreateNoteSchema}
             validateOnChange={false}
             validateOnBlur={false}

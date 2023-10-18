@@ -26,7 +26,13 @@ const Event = ({ event, shouldDisplayDate }: IEventProps) => {
           text: 'Delete',
           style: 'destructive',
           onPress: async () => {
-            await deleteEvent(event);
+            try {
+              await deleteEvent(event);
+              Alert.alert('Event deleted', '', [], { cancelable: true });
+            } catch (error) {
+              console.error('Error deleting event', error);
+            }
+
           },
         },
       ],

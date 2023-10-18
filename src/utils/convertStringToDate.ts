@@ -4,7 +4,3 @@ export const convertDateStringToDateTime = (dateString: string): Date => {
 
   return dateObject;
 };
-
-// Example usage
-const dateString = '2023-10-18';
-const dateTime = convertDateStringToDateTime(dateString);

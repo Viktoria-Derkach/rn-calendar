@@ -29,14 +29,18 @@ export const eventAPI = createApi({
       }),
       invalidatesTags: ['Event'],
     }),
-    // updateEvent: build.mutation<IEvent, IEvent>({
-    //   query: (event) => ({
-    //     url: `/events/${event.id}`,
-    //     method: "PUT",
-    //     body: event,
-    //   }),
-    //   invalidatesTags: ["Event"],
-    // }),
+    updateEvent: build.mutation({
+      query: event => {
+        const { id, ...eventBody } = event;
+
+        return {
+          url: `/events/${id}.json`,
+          method: 'PUT',
+          body: eventBody,
+        };
+      },
+      invalidatesTags: ['Event'],
+    }),
     deleteEvent: build.mutation({
       query: event => ({
         url: `/events/${event.id}.json`,

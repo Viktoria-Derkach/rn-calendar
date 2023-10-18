@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Button } from 'react-native';
 import Calendar from '../components/Calendar';
 import SlideUpPopover from '../features/SlideUpPopover';
 import Events from '../components/Events';
@@ -22,6 +22,7 @@ const CalendarScreen = () => {
   return (
     <View style={typography.screenContainer}>
       <Calendar events={events ? Object.values(events) : undefined} />
+      <Button title="refetch" onPress={refetch} />
       <View style={[{ alignItems: 'center' }]}>
         <SlideUpPopover>
           {({ showPopover }) => (
@@ -33,6 +34,7 @@ const CalendarScreen = () => {
           )}
         </SlideUpPopover>
       </View>
+
       <Events isLoading={isLoading} error={error} events={events} date={selectedDay} />
     </View>
   );
