@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from 'react';
+import { FormikErrors } from 'formik';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { ICategory } from '../types/utils';
 import { typography } from './../styles/typography';
 import { lightenColor } from '../utils/lightenColor';
-import { FormikErrors } from 'formik';
 import { categories } from '../data/categories';
 
 interface CategoryProps {

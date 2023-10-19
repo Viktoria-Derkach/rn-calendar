@@ -1,6 +1,6 @@
 import React from 'react';
-import { typography } from '../styles/typography';
 import { View, Text } from 'react-native';
+import { typography } from '../styles/typography';
 
 const dayOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 

@@ -13,6 +13,15 @@ interface IEventProps {
 const Event = ({ event, shouldDisplayDate }: IEventProps) => {
   const [deleteEvent, {}] = eventAPI.useDeleteEventMutation();
 
+  const onDelete = async () => {
+    try {
+      await deleteEvent(event);
+      Alert.alert('Event deleted', '', [], { cancelable: true });
+    } catch (error) {
+      console.error('Error deleting event', error);
+    }
+  };
+
   const removeHandler = (): void => {
     Alert.alert(
       'Delete a post',
@@ -25,20 +34,13 @@ const Event = ({ event, shouldDisplayDate }: IEventProps) => {
         {
           text: 'Delete',
           style: 'destructive',
-          onPress: async () => {
-            try {
-              await deleteEvent(event);
-              Alert.alert('Event deleted', '', [], { cancelable: true });
-            } catch (error) {
-              console.error('Error deleting event', error);
-            }
-
-          },
+          onPress: onDelete,
         },
       ],
       { cancelable: false }
     );
   };
+
   return (
     <View style={[styles.container]}>
       {event.category && (
@@ -56,7 +58,7 @@ const Event = ({ event, shouldDisplayDate }: IEventProps) => {
         <Text style={[styles.marginB, styles.description, typography.smallText]}>{event.date}</Text>
       )}
       <SlideUpPopover updateValues={event}>
-        {({ showPopover }) => <Button title="Update" color={'purple'} onPress={showPopover} />}
+        {({ showPopover }) => <Button title="Update" color={'#735BF2'} onPress={showPopover} />}
       </SlideUpPopover>
       <Button title="Delete" color={'red'} onPress={removeHandler} />
     </View>

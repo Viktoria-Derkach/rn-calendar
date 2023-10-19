@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { RefreshControl, ScrollView } from 'react-native';
+import { RefreshControl, ScrollView, SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import { eventAPI } from '../services/EventService';
 import Events from '../components/Events';
 import { typography } from '../styles/typography';
@@ -14,21 +14,18 @@ const Reminder = () => {
     shouldRemindMe: true,
   });
 
-  const [refreshing, setRefreshing] = React.useState(false);
-
-  const onRefresh = useCallback(async () => {
-    setRefreshing(true);
-    await refetch();
-    setRefreshing(false);
-  }, [refetch]);
-
   return (
-    <ScrollView
-      contentContainerStyle={[typography.screenContainer]}
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-    >
-      <Events isLoading={isLoading} error={error} events={events} shouldDisplayDate />
-    </ScrollView>
+    <SafeAreaView style={[typography.screenContainer]}>
+      <Events
+          refetch={refetch}
+        // onRefresh={onRefresh}
+        // refreshing={refreshing}
+        isLoading={isLoading}
+        error={error}
+        events={events}
+        shouldDisplayDate
+      />
+    </SafeAreaView>
   );
 };
 
