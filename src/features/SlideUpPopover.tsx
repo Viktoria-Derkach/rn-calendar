@@ -96,7 +96,9 @@ const SlideUpPopover = ({ updateValues, children }: ISlideUpPopoverProps) => {
       <Modal isVisible={isModalVisible} onBackdropPress={hidePopover} style={styles.modal}>
         <Animated.View style={[styles.modalContent, animatedStyle]}>
           <View style={styles.draggableHandle} />
-          <Text style={[styles.title, typography.marginB]}>Add New Event</Text>
+          <Text style={[styles.title, typography.marginB]}>
+            {!updateValues ? 'Add New Event' : 'Update the event'}
+          </Text>
           <Formik
             initialValues={initialValues}
             onSubmit={updateValues ? updateEventOnSubmit : createEventOnSubmit}
