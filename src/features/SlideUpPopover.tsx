@@ -1,8 +1,7 @@
-import React, { useState, PropsWithChildren, useMemo, ReactNode } from 'react';
+import React, { useState, ReactNode } from 'react';
 import {
   View,
   Text,
-  TouchableOpacity,
   StyleSheet,
   TextInput,
   Button,
@@ -45,12 +44,7 @@ const SlideUpPopover = ({ updateValues, children }: ISlideUpPopoverProps) => {
   const [createEvent, {}] = eventAPI.useCreateEventMutation();
   const [updateEvent, {}] = eventAPI.useUpdateEventMutation();
 
-  const initialValues = useMemo(() => {
-    if (!updateValues) {
-      return { ...defaultInitialValues };
-    }
-    return { ...updateValues };
-  }, [updateValues]);
+  const initialValues = !updateValues ? { ...defaultInitialValues } : { ...updateValues };
 
   const showPopover = (): void => {
     setModalVisible(true);

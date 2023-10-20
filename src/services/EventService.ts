@@ -1,6 +1,4 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/dist/query/react';
-// import { IEvent } from "../models/IEvent";
-import uuid from 'react-native-uuid';
 
 export const eventAPI = createApi({
   reducerPath: 'eventApi',

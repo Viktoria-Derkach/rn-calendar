@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback } from 'react';
 import { Text, FlatList, StyleSheet } from 'react-native';
 import { IEvent } from '../types/utils';
 import { typography } from '../styles/typography';
@@ -35,20 +35,18 @@ const Events = ({ events, error, isLoading, date, shouldDisplayDate, refetch }: 
     return <Text style={typography.text}>Error fetching events, {JSON.stringify(error)}</Text>;
   }
 
-  const eventsArray = useMemo(() => {
-    return Object.keys(events).reduce((acc, id) => {
-      const event = events[id];
+  const eventsArray = Object.keys(events).reduce((acc, id) => {
+    const event = events[id];
 
-      if (!date || event.date === date) {
-        acc.push({
-          id,
-          ...event,
-        });
-      }
+    if (!date || event.date === date) {
+      acc.push({
+        id,
+        ...event,
+      });
+    }
 
-      return acc;
-    }, [] as IEvent[]);
-  }, [events, date]);
+    return acc;
+  }, [] as IEvent[]);
 
   const refetchProps = refetch
     ? {
